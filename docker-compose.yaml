@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: fastapi_app
+    ports:
+      - "3030:3030"
+    command: bash -c "uvicorn --host 0.0.0.0 --port 3030 app.main:app --reload"
+    depends_on:
+      - app_db
+    volumes:
+      - image_data:/home/app/image_data
+    env_file:
+      - .env
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "${POSTGRES_USER}" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  app_db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    restart: always
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+volumes:
+  postgres_data:
+  image_data:

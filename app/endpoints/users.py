@@ -1,4 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi_pagination import Page, paginate
+from fastapi_pagination.bases import AbstractPage
 from sqlalchemy.orm import Session
 
 from app import schemas, crud
@@ -7,9 +9,11 @@ from app.database import get_db
 users_router = APIRouter()
 
 
-@users_router.get("/users/", response_model=schemas.User)
-def get_users(db: Session = Depends(get_db)):
-    return crud.get_all_users(db)
+@users_router.get("/users/", response_model=Page[schemas.User])
+def get_users(db: Session = Depends(get_db), username: Union[str, None] = None) -> AbstractPage[schemas.User]:
+    if username:
+        return paginate(crud.get_filtered_users_by_username(db, username))
+    return paginate(crud.get_all_users(db))
 
 
 @users_router.get("/users/{user_id}", response_model=schemas.User)

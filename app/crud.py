@@ -14,7 +14,6 @@ def get_user_by_username(db: Session, username: str) -> Union[models.UserInfo, N
 
 
 def get_all_users(db: Session) -> Union[list[models.UserInfo], None]:
-    # TODO: im erasing ', skip: int = 0, limit: int = 100' part since i will be implementing pagination
     return db.query(models.UserInfo).all()
 
 
@@ -29,3 +28,15 @@ def create_user(db: Session, user: schemas.UserCreate) -> models.UserInfo:
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+def get_budgets(db: Session) -> Union[list[models.Budget], None]:
+    return db.query(models.Budget).all()
+
+
+def create_budget(db: Session, budget: schemas.BudgetCreate, user_id: int) -> models.Budget:
+    db_budget = models.Budget(**budget.dict(), owner_id=user_id)
+    db.add(db_budget)
+    db.commit()
+    db.refresh(db_budget)
+    return db_budget

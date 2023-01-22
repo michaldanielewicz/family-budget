@@ -11,6 +11,9 @@ class Config(BaseSettings):
     DB = os.environ.get("POSTGRES_DB")
 
     SQL_DATABASE_URL = f"postgresql+psycopg2://{USER}:{PASSWORD}@app_db/{DB}"
+    SECRET_KEY = os.environ.get("SECRET_KEY")
+    ALGORITHM = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
 @lru_cache

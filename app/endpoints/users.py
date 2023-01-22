@@ -1,9 +1,11 @@
+from typing import Union
+
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi_pagination import Page, paginate
 from fastapi_pagination.bases import AbstractPage
 from sqlalchemy.orm import Session
 
-from app import schemas, crud
+from app import crud, schemas
 from app.database import get_db
 
 users_router = APIRouter()
@@ -18,6 +20,9 @@ def get_users(db: Session = Depends(get_db), username: Union[str, None] = None) 
 
 @users_router.get("/users/{user_id}", response_model=schemas.User)
 def get_user_by_id(user_id: int, db: Session = Depends(get_db)):
+    user = crud.get_user_by_id(db, user_id)
+    if user is None:
+        raise HTTPException(status_code=400, detail=f"User with ID {user_id} doesn't exist")
     return crud.get_user_by_id(db, user_id)
 
 

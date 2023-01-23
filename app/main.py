@@ -3,9 +3,9 @@ from fastapi_pagination import add_pagination
 
 from app import models
 from app.database import engine
-from app.endpoints.auth import auth_router
-from app.endpoints.budgets import budgets_router
-from app.endpoints.users import users_router
+from app.routers.auth import auth_router
+from app.routers.budgets import budgets_router
+from app.routers.users import users_router
 
 models.Base.metadata.create_all(bind=engine)
 

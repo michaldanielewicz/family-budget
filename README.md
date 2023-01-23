@@ -1,23 +1,76 @@
-# Family Budget App
+# Family budget API
 
-## Task description
+This API allows you to create user, authorize (OAuth2) and create a budget. 
 
-The application should allow for creating several users. Each user can create a list of
-any number of budgets and share it with any number of users. The budget consists of
-income and expenses. They are grouped into categories. It is required to create REST or
-GraphQL API and a database. The project should contain authorisation, tests, fixtures,
-filtering and pagination.
+### Things not yet implemented
 
-## Technologies
+* Add expenses and incomes to budget.
+* Share a budget with other registered users.
+* Admin page.
+* Add categories for incomes/expenses.
+* Add tests (TDD not strong with this one).
 
-Any. Whatever would be best in your opinion (including JS frameworks).
 
-## Requirements 
+### Stack
 
-Entire project should be available as an open source project on GitHub. Please
-commit your work on a regular basis (rather than one huge commit). The project should
-contain a README file with information how to install the application in a local environment.
+* Python 3.10
+* FastAPI
+* SQLAlchemy
+* postgres
 
-## Deploy
+### Requirements
 
-Please use Docker for orchestration (docker-compose).
+* Docker
+* docker-compose
+
+### Installation
+
+1. Clone the repository
+
+    `git clone https://github.com/michaldanielewicz/family-budget`  
+  
+
+2. Change directory to the cloned repository
+
+    `cd family-budget`
+
+
+3. Edit `.env.template` file
+
+    ```
+    POSTGRES_USER=*edit_this_value*
+    POSTGRES_PASSWORD={{POSTGRES_PASSWORD}}
+    ...
+    ```
+
+
+4. Rename `.env.template` to `.env`
+
+
+5. Build the Docker image:
+
+    `make build`
+
+
+6. To run containers:
+
+   `make up`
+
+
+### Usage
+
+Available endpoints:
+
+    GET /users: Fetch all users (can filter by provided username)
+    POST /users: Create new user
+    GET /users/me: Fetch authorized user (need login)
+
+    GET /budgets: Fetch budget (authorized user)
+    POST /budgets: Create new budget
+
+You can recall all the available endpoints and documentation at http://0.0.0.0:3030/redoc or http://0.0.0.0:3030/redoc.
+
+
+### Dev
+
+You can enter the container with app by typing `make bash`

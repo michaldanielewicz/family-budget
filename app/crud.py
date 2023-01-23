@@ -2,8 +2,9 @@ from typing import Union
 
 from sqlalchemy.orm import Session
 
-from . import models, schemas
 from app.utils import get_password_hash
+
+from . import models, schemas
 
 
 def get_user_by_id(db: Session, user_id: int) -> Union[models.UserInfo, None]:
@@ -34,8 +35,12 @@ def get_budgets(db: Session) -> Union[list[models.Budget], None]:
     return db.query(models.Budget).all()
 
 
-def create_budget(db: Session, budget: schemas.BudgetCreate, user_id: int) -> models.Budget:
-    db_budget = models.Budget(**budget.dict(), owner_id=user_id)
+def get_budgets_by_owner_id(db: Session, owner_id: int) -> Union[list[models.Budget], None]:
+    return db.query(models.Budget).filter(models.Budget.owner_id == owner_id).all()
+
+
+def create_budget(db: Session, budget: schemas.BudgetCreate, owner_id: int) -> models.Budget:
+    db_budget = models.Budget(**budget.dict(), owner_id=owner_id)
     db.add(db_budget)
     db.commit()
     db.refresh(db_budget)
